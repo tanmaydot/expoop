@@ -1,0 +1,161 @@
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+  SafeAreaView,
+  Image,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { FontAwesome } from '@expo/vector-icons';
+
+const App = () => {
+  const apiUrl = 'https://dummyjson.com/products';
+
+  const [data, setData] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    setLoading(true);
+    setError('');
+
+    fetch(apiUrl + '?limit=10', {
+      method: 'GET',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((responseData) => {
+        setData(responseData);
+      })
+      .catch((err) => {
+        setError('Error fetching data. Please try again.');
+        console.error('Error fetching data:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const resetData = () => {
+    setData(null);
+    setError('');
+    setLoading(false);
+  };
+
+  const ProductCard = ({ product }) => {
+    return (
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Image source={{ uri: product.thumbnail }} style={styles.thumbnail} />
+          <Text style={styles.itemTitle}>{product.title}</Text>
+        </View>
+        <Text style={styles.json}>Description: {product.description}</Text>
+        <Text style={styles.json}>Price: ${product.price}</Text>
+        <Text style={styles.json}>Discount Percentage: {product.discountPercentage}%</Text>
+        <Text style={styles.json}>Rating: {product.rating}</Text>
+        <Text style={styles.json}>Stock: {product.stock}</Text>
+        <Text style={styles.json}>Brand: {product.brand}</Text>
+        <Text style={styles.json}>Category: {product.category}</Text>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={fetchData} style={styles.button}>
+        <Text>
+            <FontAwesome name="refresh" size={20} color="white" />
+          </Text>
+        </TouchableOpacity>
+        {loading && <ActivityIndicator size="small" color="orange" />}
+        <TouchableOpacity onPress={resetData} style={styles.button}>
+          <Text>
+            <FontAwesome name="home" size={20} color="white" />
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {data !== null ? (
+        <ScrollView>
+          {data.products.map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))}
+        </ScrollView>
+      ) : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <StatusBar backgroundColor="orange" />
+    </SafeAreaView>
+  );
+};
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 40,
+    marginBottom: 5,
+  },
+  button: {
+    width: '35%',
+    height: 40,
+    backgroundColor: 'orange',
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 20,
+    margin: 10,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    flex: 1,
+  },
+  errorText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+  },
+  json: {
+    textAlign: 'left',
+  },
+  thumbnail: {
+    width: '30%',
+    height: 100,
+    marginBottom: 10,
+  },
+});
+
+export default App;

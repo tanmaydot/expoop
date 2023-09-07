@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, SafeAreaView } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Text } from 'react-native'; // Added 'Text' import
 import Lists from './List'; 
 import FavList from './Fav'; 
 
@@ -44,7 +44,9 @@ const Movie = () => {
           value={newMovie}
           onChangeText={(text) => setNewMovie(text)}
         />
-        <Button title="Add" onPress={addMovie} />
+        <TouchableOpacity title="Add" onPress={addMovie} style={styles.button}>
+          <Text>ADD</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.listsContainer}>
         <Lists movies={movies} toggleFavorite={toggleFavorite} deleteMovie={deleteMovie} />
@@ -65,17 +67,22 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   input: {
-    marginBottom: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 4,
-    width: '80%', // Adjust the width as needed
+    width: '80%',
   },
+  
   listsContainer: {
     flex: 1,
     flexDirection: 'row',
   },
+  button: {
+    backgroundColor:'#3f51b5' ,
+    padding: 10,
+    
+  }
 });
 
 export default Movie;

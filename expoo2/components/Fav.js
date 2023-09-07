@@ -5,8 +5,8 @@ import { Icon } from 'react-native-elements';
 const Fav = ({ movies, onToggleFavorite }) => {
   const renderItem = ({ item }) => {
     return (
-      <View style={styles.movieContainer}>
-        <Text style={styles.movieText}>{item.text}</Text>
+      <View style={styles.favContainer}>
+        <Text style={styles.favText}>{item.text}</Text>
         <TouchableOpacity onPress={() => onToggleFavorite(item.id)}>
           <Icon
             name={item.favorite ? 'trash-bin' : 'trash-bin-outline'}
@@ -38,22 +38,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#333',
   },
-  movieContainer: {
+  favContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginBottom: 10,
     backgroundColor: 'white',
-    padding: 10,
+    padding: 1,
     borderRadius: 8,
     elevation: 2,
   },
-  movieText: {
+  favText: {
     flex: 1,
     marginRight: 10,
     fontSize: 18,
